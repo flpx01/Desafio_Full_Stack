@@ -12,7 +12,7 @@ Este é o frontend de uma aplicação VueJS 3 com TypeScript, configurado para r
 
 Antes de começar, certifique-se de que os seguintes pré-requisitos estão instalados:
 
-- *Node.js* (versão 16 ou superior)  
+- Node.js (versão 16 ou superior)  
   Para verificar a versão do Node.js instalada, utilize o comando:
   bash
   node -v
@@ -20,7 +20,7 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
 
 ---
 
-1. *Acesse a pasta do frontend:*
+1. Acesse a pasta do frontend:
    Primeiro, abra o terminal ou prompt de comando e navegue até a pasta frontend. Use o comando:
  
    cd frontend
@@ -29,7 +29,7 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
 
 ---
 
-2. *Verifique o arquivo package.json:*
+2. Verifique o arquivo package.json:
    Confirme que existe um arquivo chamado package.json na pasta frontend. Esse arquivo contém informações sobre as dependências e scripts do projeto.
 
    Para verificar, use:
@@ -40,14 +40,14 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
 
 ---
 
-3. *Instale as dependências do projeto:*
+3. Instale as dependências do projeto:
    No terminal, execute o comando abaixo para instalar todas as dependências necessárias. Este comando utiliza o gerenciador de pacotes Node.js (npm).
    
    npm install
 
 ---
 
-4. *Configure variáveis de ambiente:*
+4. Configure variáveis de ambiente:
    Verifique se há um arquivo .env.example ou similar na pasta do projeto. Caso exista, siga estas etapas:
 
    - Renomeie o arquivo .env.example para .env:
@@ -60,7 +60,7 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
 
 ---
 
-5. *Inicie o servidor de desenvolvimento:*
+5. Inicie o servidor de desenvolvimento:
    Após a instalação das dependências, inicie o servidor de desenvolvimento com o comando:
   
    npm run dev
@@ -70,26 +70,26 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
    yarn dev
    
 
-   > *Nota:* O comando exibirá no terminal a URL para acessar o frontend. Geralmente será algo como:
+   > Nota: O comando exibirá no terminal a URL para acessar o frontend. Geralmente será algo como:
    
      VITE v6.0.7  ready in 4344 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
-  ➜  Vue DevTools: Open http://localhost:5173/__devtools__/ as a separate window
+  ➜  Vue DevTools: Open http://localhost:5173/_devtools_/ as a separate window
   ➜  Vue DevTools: Press Alt(⌥)+Shift(⇧)+D in App to toggle the Vue DevTools
   ➜  press h + enter to show help
    
 
 ---
 
-6. *Acesse o projeto no navegador:*
+6. Acesse o projeto no navegador:
    Copie a URL exibida no terminal, como http://localhost:5173/, e cole no navegador. Isso abrirá a interface do projeto.
    (ou pressione ctrl + clique para ser direcionado a url)
 
 ---
 
-7. *Verifique se há erros no console:*
+7. Verifique se há erros no console:
    Caso a aplicação não carregue ou apresente erros, revise:
    - Configuração do arquivo .env.
    - Mensagens de erro no terminal.
@@ -97,7 +97,7 @@ Antes de começar, certifique-se de que os seguintes pré-requisitos estão inst
 
 ---
 
-8. *Build para produção (opcional):*
+8. Build para produção (opcional):
    Se você precisar gerar uma versão otimizada para produção, execute:
   
    npm run build
@@ -133,71 +133,25 @@ cd backend
 
 ---
 
-### 2. aplique o comando para construir os Contêineres e suba os Contêineres Docker em segundo plano 
+### 2. Configure o Arquivo .env
 
-Construa os contêineres com o comando:
-
-bash
-docker-compose --build
-
-Suba os contêineres com o comando:
-bash
-docker-compose up -d
-
-
----
-
-### 3. Entre dentro do Contêiner para executar os comando subsequentes 
-
-Use o comando:
-
-bash
-docker-compose exec app bash
-
----
-
-
-### 4. Instale o Composer (se necessário)
-
-O Laravel utiliza o Composer para gerenciar dependências. Certifique-se de que o Composer esteja instalado no seu sistema. Para verificar:
-
-bash
-composer --version
-
-
-Caso não esteja instalado, siga as instruções no site oficial: [Composer Download](https://getcomposer.org/download/).
-
----
-
-### 5. Instale as Dependências do Projeto
-
-Execute o seguinte comando para instalar as dependências do backend, listadas no arquivo `composer.json`:
-
-bash
-composer install
-
-
----
-
-### 6. Configure o Arquivo `.env`
-
-Verifique se há um arquivo chamado `.env.example` no projeto. Se houver, renomeie-o para `.env`:
+Verifique se há um arquivo chamado .env.example no projeto. Se houver, renomeie-o para .env:
 
 bash
 cp .env.example .env
 
 
-Abra o arquivo `.env` em um editor de texto e configure as variáveis de ambiente. Algumas configurações comuns incluem:
+Abra o arquivo .env em um editor de texto e configure as variáveis de ambiente. Algumas configurações comuns incluem:
 
 #### Banco de Dados
 
 env
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=db_test
-DB_USERNAME=root
-DB_PASSWORD=<sua senha>
+DB_DATABASE=laravel
+DB_USERNAME=docker
+DB_PASSWORD=password
 
 
 #### URL da Aplicação
@@ -208,7 +162,37 @@ APP_URL=http://localhost
 
 ---
 
-### 7. Gere a Chave da Aplicação
+### 3. Construa e inicie os Contêineres
+
+Construa e suba os contêineres Docker em segundo plano com o comando:
+
+bash
+docker-compose up -d --build
+
+
+---
+
+### 4. Entre no Contêiner da Aplicação
+
+Use o comando:
+
+bash
+docker-compose exec app bash
+
+
+---
+
+### 5. Instale as Dependências do Projeto
+
+Execute o seguinte comando para instalar as dependências do backend, listadas no arquivo composer.json:
+
+bash
+composer install
+
+
+---
+
+### 6. Gere a Chave da Aplicação
 
 O Laravel precisa de uma chave de criptografia para funcionar. Gere-a com o comando:
 
@@ -216,61 +200,18 @@ bash
 php artisan key:generate
 
 
-Isso criará uma chave no campo `APP_KEY` do arquivo `.env`.
+Isso criará uma chave no campo APP_KEY do arquivo .env.
 
 ---
 
-### 8. Configure o Banco de Dados
+### 7. Rode as Migrações
 
-O banco de dados será gerado automaticamente pelo ORM do Laravel ao rodar as migrações. Certifique-se de que as configurações no arquivo `.env` estejam corretas.
-
----
-
-### 9. Rode as Migrações e Seeders
-
-Caso o projeto inclua tabelas ou dados predefinidos, rode as migrações e seeders:
+O banco de dados será gerado automaticamente pelo ORM do Laravel ao rodar as migrações. Certifique-se de que as configurações no arquivo .env estejam corretas e execute:
 
 bash
-php artisan migrate --seed
+php artisan migrate
 
-
-Isso criará as tabelas no banco e preencherá dados básicos (se os seeders existirem).
-
-#### Gerar Migrações Manualmente
-
-Se você enfrentar erros ao rodar as migrações, pode executá-las manualmente com os seguintes comandos dentro do Contêiner do backend:
-
-1. Resetar as migrações:
-
-   bash
-   php artisan migrate:reset
-   
-
-2. Rodar novamente todas as migrações:
-
-   bash
-   php artisan migrate
-   
-
-3. Para rodar os seeders separadamente (caso não tenham sido incluídos):
-
-   bash
-   php artisan db:seed
-   
-
----
-
-### 10. Inicie o Servidor de Desenvolvimento
-
-Para rodar a aplicação localmente, use o servidor embutido do PHP:
-
-bash
-php artisan serve
-
-
-Por padrão, o Laravel estará disponível em `http://127.0.0.1:8000`.
-
----
+-------
 
 ## Acessar o Backend
 
