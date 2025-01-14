@@ -46,7 +46,7 @@
             password_confirmation: passwordConfirmation.value,
           });
           alert('Usuário registrado com sucesso!');
-          router.push('/login'); // Redireciona para a tela de login
+          router.push('/'); // Redireciona para a tela de login
         } catch (error) {
           console.error(error);
         }
