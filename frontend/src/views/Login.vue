@@ -1,13 +1,19 @@
 <template>
-    <div>
+    <div class="login-container">
       <h2>Login</h2>
-      <form @submit.prevent="loginUser">
+      <form class="login-form" @submit.prevent="loginUser">
         <label>Email:</label>
-        <input v-model="email" type="email" required />
+        <input v-model="email" type="email" placeholder="Digite seu email" required />
+        
         <label>Senha:</label>
-        <input v-model="password" type="password" required />
-        <button type="submit">Login</button>
+        <input v-model="password" type="password" placeholder="Digite sua senha" required />
+        
+        <button type="submit" class="login-button">Login</button>
       </form>
+      <div class="redirect-container">
+        <p>Não possui uma conta?</p>
+        <button class="register-button" @click="goToRegister">Registrar-se</button>
+      </div>
     </div>
   </template>
   
@@ -31,13 +37,106 @@
           });
           TokenService.saveToken(response.data.token);
           alert('Login realizado com sucesso!');
-          router.push('/'); // Redireciona para a tela da lista de produtos
+          router.push('/produto/list'); // Redireciona para a tela da lista de produtos
         } catch (error) {
           console.error(error);
         }
       };
   
-      return { email, password, loginUser };
+      const goToRegister = () => {
+        router.push('/register'); // Redireciona para a página de registro
+      };
+  
+      return { email, password, loginUser, goToRegister };
     },
   });
   </script>
+  
+  <style scoped>
+  .login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .login-form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .login-form input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+  }
+  
+  .login-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .login-button:focus {
+    outline: none;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+  }
+  
+  .redirect-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .register-button {
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .register-button:hover {
+    background-color: #218838;
+  }
+  
+  .register-button:focus {
+    outline: none;
+    box-shadow: 0 0 3px rgba(40, 167, 69, 0.5);
+  }
+  </style>
+  

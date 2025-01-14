@@ -8,10 +8,10 @@ import { TokenService } from '@/service/TokenService';
 import CategoriaForm from '@/views/CategoriaForm.vue';
 
 const routes = [
-  { path: '/', name: 'ProductList', component: ProductList },
+  { path: '/produto/list', name: 'ProductList', component: ProductList },
   { path: '/products/new', name: 'ProductNew', component: ProductForm },
   {path: '/categories/new', name: 'CategoryForm', component: CategoriaForm },
-  { path: '/login', name: 'Login', component: Login },
+  { path: '/', name: 'Login', component: Login },
   { path: '/register', name: 'Registro', component: Registro },
   {
     path: '/protected',

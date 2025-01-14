@@ -4,7 +4,7 @@
       <a class="navbar-brand" href="#">Minha Loja</a>
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link" to="/">Lista de Produtos</router-link>
+          <router-link class="nav-link" to="/produto/list">Lista de Produtos</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" to="/products/new">Cadastrar Produto</router-link>
