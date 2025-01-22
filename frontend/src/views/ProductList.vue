@@ -12,23 +12,25 @@
         />
       </div>
     </div>
+    <div v-if="loading" class="text-center">
+      <p>Carregando produtos...</p>
+    </div>
     <div class="row">
-      <div v-if="products.length === 0" class="alert alert-info text-center">
+      <div v-if="!loading && products.length === 0" class="alert alert-info text-center">
         Nenhum produto cadastrado.
       </div>
       <div
         v-for="product in products"
-        :key="product?.id || Math.random()"
+        :key="product?.id"
         class="col-md-4 mb-4"
-        v-if="product && product.id"
       >
         <div class="card shadow-sm h-100">
-          {<img
-            :src="product.imagem || 'https://via.placeholder.com/300x200'"
+          <img
+            v-if="product.imagem"
+            :src="product.imagem"
             class="card-img-top"
             alt="Imagem do Produto"
             style="height: 200px; object-fit: cover;"
-          }  
           />
           <div class="card-body">
             <h5 class="card-title text-truncate">{{ product.nome }}</h5>
@@ -61,8 +63,8 @@ async function fetchProducts(page = 1) {
   loading.value = true;
   try {
     const data = await getProducts(search.value, page);
-    console.log('Produtos carregados:', data);
-    products.value = data.data || []; // Garante que produtos seja um array
+    console.log('Produtos carregados:', data); // Log para depuração
+    products.value = data || []; // Garante que produtos seja um array
   } catch (error) {
     alert('Erro ao buscar produtos. Tente novamente mais tarde.');
     console.error(error);

@@ -8,10 +8,27 @@ use Illuminate\Support\Facades\Log;
 
 class ProdutoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $produtos = Produto::with('categoria')->paginate(10);
+            $query = Produto::with('categoria');
+
+            // Adiciona suporte à busca por nome ou descrição
+            if ($request->has('search') && $request->search) {
+                $search = $request->search;
+                $query->where('nome', 'like', "%{$search}%")
+                      ->orWhere('descricao', 'like', "%{$search}%");
+            }
+
+            $produtos = $query->paginate(10);
+
+            // Adiciona o caminho completo às imagens
+            foreach ($produtos->items() as $produto) {
+                $produto->imagem = $produto->imagem 
+                    ? asset('storage/produtos/' . $produto->imagem) 
+                    : null;
+            }
+
             return response()->json([
                 'success' => true,
                 'data' => $produtos,
@@ -25,6 +42,7 @@ class ProdutoController extends Controller
         }
     }
 
+    // Mantendo os demais métodos como estão
     public function store(Request $request)
     {
         $validated = $request->validate([

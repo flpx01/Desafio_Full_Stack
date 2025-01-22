@@ -24,7 +24,7 @@ export const getProducts = async (search = '', page = 1): Promise<Produto[]> => 
       headers: getAuthHeaders(),
       params: { search, page },
     });
-    return response.data;
+    return response.data.data.data || []; // Corrigido para acessar os produtos na resposta paginada
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
     throw new Error('Não foi possível buscar os produtos.');
