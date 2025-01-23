@@ -107,6 +107,8 @@ class ProdutoController extends Controller
 
     public function update(Request $request, $id)
     {
+        \Log::info('Dados recebidos para atualização:', $request->all());
+
         $validated = $request->validate([
             'nome' => 'required|max:50',
             'descricao' => 'required|max:200',
