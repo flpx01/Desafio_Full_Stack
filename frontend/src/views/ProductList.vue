@@ -21,7 +21,7 @@
       </div>
       <div
         v-for="product in products"
-        :key="product?.id"
+        :key="product.id"
         class="col-md-4 mb-4"
       >
         <div class="card shadow-sm h-100">
@@ -37,7 +37,7 @@
             <p class="card-text text-truncate">{{ product.descricao }}</p>
             <p class="card-text"><strong>R$ {{ product.preco }}</strong></p>
             <div class="d-flex justify-content-between">
-              <button class="btn btn-outline-primary btn-sm" @click="editProduct(product.id)">
+              <button class="btn btn-outline-primary btn-sm" @click="openEditModal(product)">
                 Editar
               </button>
               <button class="btn btn-outline-danger btn-sm" @click="deleteProductHandler(product.id)">
@@ -48,23 +48,73 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de Edição -->
+    <div
+      v-if="showEditModal"
+      class="modal fade show"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5);"
+      tabindex="-1"
+      role="dialog"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Produto</h5>
+            <button type="button" class="btn-close" @click="closeEditModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="submitEditForm">
+              <div class="mb-3">
+                <label for="nome" class="form-label">Nome do Produto</label>
+                <input v-model="selectedProduct.nome" type="text" id="nome" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea v-model="selectedProduct.descricao" id="descricao" class="form-control" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="preco" class="form-label">Preço</label>
+                <input v-model="selectedProduct.preco" type="number" id="preco" class="form-control" min="0" step="0.01" required />
+              </div>
+              <div class="mb-3">
+                <label for="data_validade" class="form-label">Data de Validade</label>
+                <input v-model="selectedProduct.data_validade" type="date" id="data_validade" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="imagem" class="form-label">Imagem</label>
+                <input type="file" id="imagem" class="form-control" @change="handleImageUpload" />
+                <img v-if="selectedProduct.imagem" :src="selectedProduct.imagem" class="img-thumbnail mt-2" style="max-width: 200px;" />
+              </div>
+              <div class="mb-3">
+                <label for="categoria_id" class="form-label">Categoria</label>
+                <input v-model="selectedProduct.categoria_id" type="number" id="categoria_id" class="form-control" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { getProducts, deleteProduct } from '../service/productService';
+import { getProducts, deleteProduct, updateProduct } from '../service/productService';
 
 const products = ref([]);
 const search = ref('');
 const loading = ref(false);
+const showEditModal = ref(false); // Controla a exibição do modal
+const selectedProduct = ref({}); // Armazena os dados do produto selecionado para edição
+const imageFile = ref(null); // Armazena o arquivo de imagem selecionado
 
 async function fetchProducts(page = 1) {
   loading.value = true;
   try {
     const data = await getProducts(search.value, page);
-    console.log('Produtos carregados:', data); // Log para depuração
-    products.value = data || []; // Garante que produtos seja um array
+    products.value = data || [];
   } catch (error) {
     alert('Erro ao buscar produtos. Tente novamente mais tarde.');
     console.error(error);
@@ -73,15 +123,43 @@ async function fetchProducts(page = 1) {
   }
 }
 
-async function deleteProductHandler(id) {
-  if (confirm('Tem certeza que deseja excluir este produto?')) {
-    try {
-      await deleteProduct(id);
-      fetchProducts();
-    } catch (error) {
-      alert('Erro ao excluir o produto. Tente novamente mais tarde.');
-      console.error(error);
+function openEditModal(product) {
+  selectedProduct.value = { ...product }; // Clona os dados do produto selecionado
+  showEditModal.value = true;
+}
+
+function closeEditModal() {
+  showEditModal.value = false;
+  selectedProduct.value = {};
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    imageFile.value = file;
+  }
+}
+
+async function submitEditForm() {
+  try {
+    const formData = new FormData();
+    Object.entries(selectedProduct.value).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, value instanceof File ? value : String(value));
+      }
+    });
+
+    if (imageFile.value) {
+      formData.append('imagem', imageFile.value);
     }
+
+    await updateProduct(selectedProduct.value.id, formData);
+    alert('Produto atualizado com sucesso!');
+    closeEditModal();
+    fetchProducts(); // Recarrega a lista de produtos
+  } catch (error) {
+    alert('Erro ao atualizar o produto. Tente novamente mais tarde.');
+    console.error(error);
   }
 }
 
@@ -89,14 +167,9 @@ async function deleteProductHandler(id) {
 fetchProducts();
 </script>
 
-<style>
-.card {
-  border-radius: 10px;
-}
-.card-img-top {
-  border-radius: 10px 10px 0 0;
-}
-.card-title {
-  font-weight: bold;
+<style scoped>
+.img-thumbnail {
+  max-width: 200px;
+  height: auto;
 }
 </style>
