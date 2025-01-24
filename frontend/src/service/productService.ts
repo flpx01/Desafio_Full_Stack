@@ -59,19 +59,25 @@ export const createProduct = async (formData: FormData): Promise<Produto> => {
   }
 };
 
-// Ajustado para aceitar FormData
 export const updateProduct = async (id: number, formData: FormData): Promise<Produto> => {
   try {
-    const response = await api.put(`/produtos/${id}`, formData, {
+    // Envia a requisição para atualizar o produto
+    const response = await api.post(`/produtos/${id}`, formData, {
       headers: {
-        ...getAuthHeaders(),
-        'Content-Type': 'multipart/form-data',
+        ...getAuthHeaders(), // Inclui os headers de autenticação
+        'Content-Type': 'multipart/form-data', // Certifica o envio como multipart/form-data
       },
     });
+
+    // Retorna os dados do produto atualizado
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro ao atualizar produto:', error);
-    throw new Error(`Não foi possível atualizar o produto com ID ${id}.`);
+
+    // Verifica se há uma resposta do servidor com detalhes do erro
+    const serverMessage =
+      error.response?.data?.message || error.response?.statusText || 'Erro desconhecido no servidor.';
+    throw new Error(`Não foi possível atualizar o produto com ID ${id}. Detalhes: ${serverMessage}`);
   }
 };
 

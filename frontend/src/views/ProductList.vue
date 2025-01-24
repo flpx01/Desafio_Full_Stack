@@ -84,7 +84,8 @@
               <div class="mb-3">
                 <label for="imagem" class="form-label">Imagem</label>
                 <input type="file" id="imagem" class="form-control" @change="handleImageUpload" />
-                <img v-if="selectedProduct.imagem" :src="selectedProduct.imagem" class="img-thumbnail mt-2" style="max-width: 200px;" />
+                <img v-if="selectedProduct.imagem && !imageFile" :src="selectedProduct.imagem" class="img-thumbnail mt-2" style="max-width: 200px;" />
+                <img v-if="imageFile" :src="previewImage" class="img-thumbnail mt-2" style="max-width: 200px;" />
               </div>
               <div class="mb-3">
                 <label for="categoria_id" class="form-label">Categoria</label>
@@ -109,6 +110,7 @@ const loading = ref(false);
 const showEditModal = ref(false); // Controla a exibição do modal
 const selectedProduct = ref({}); // Armazena os dados do produto selecionado para edição
 const imageFile = ref(null); // Armazena o arquivo de imagem selecionado
+const previewImage = ref(null); // Pré-visualização da nova imagem
 
 async function fetchProducts(page = 1) {
   loading.value = true;
@@ -125,30 +127,40 @@ async function fetchProducts(page = 1) {
 
 function openEditModal(product) {
   selectedProduct.value = { ...product }; // Clona os dados do produto selecionado
+  previewImage.value = null; // Reseta a pré-visualização
+  imageFile.value = null; // Reseta o arquivo de imagem
   showEditModal.value = true;
 }
 
 function closeEditModal() {
   showEditModal.value = false;
   selectedProduct.value = {};
+  imageFile.value = null; // Reseta o arquivo de imagem ao fechar o modal
+  previewImage.value = null; // Reseta a pré-visualização
 }
 
 function handleImageUpload(event) {
   const file = event.target.files[0];
-  if (file) {
+  if (file && file.type.startsWith('image/')) {
     imageFile.value = file;
+    previewImage.value = URL.createObjectURL(file); // Atualiza a pré-visualização
+  } else {
+    alert('Por favor, selecione um arquivo de imagem válido.');
   }
 }
 
 async function submitEditForm() {
   try {
     const formData = new FormData();
+
+    // Adiciona os valores do produto no FormData
     Object.entries(selectedProduct.value).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        formData.append(key, value instanceof File ? value : String(value));
+      if (value !== null && value !== undefined && key !== 'imagem') {
+        formData.append(key, String(value));
       }
     });
 
+    // Adiciona a imagem apenas se um novo arquivo foi selecionado
     if (imageFile.value) {
       formData.append('imagem', imageFile.value);
     }
@@ -159,6 +171,20 @@ async function submitEditForm() {
     fetchProducts(); // Recarrega a lista de produtos
   } catch (error) {
     alert('Erro ao atualizar o produto. Tente novamente mais tarde.');
+    console.error(error);
+  }
+}
+
+async function deleteProductHandler(productId) {
+  try {
+    const confirmDelete = confirm('Tem certeza que deseja excluir este produto?');
+    if (confirmDelete) {
+      await deleteProduct(productId);
+      alert('Produto excluído com sucesso!');
+      fetchProducts(); // Atualiza a lista após a exclusão
+    }
+  } catch (error) {
+    alert('Erro ao excluir o produto. Tente novamente mais tarde.');
     console.error(error);
   }
 }

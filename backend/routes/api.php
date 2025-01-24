@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [ProdutoController::class, 'index']);          // Lista todos os produtos
         Route::post('/', [ProdutoController::class, 'store']);         // Cria um novo produto
         Route::get('/{produto}', [ProdutoController::class, 'show']);   // Mostra um produto específico
-        Route::put('/{produto}', [ProdutoController::class, 'update']); // Atualiza um produto específico
+        Route::post('/{id}', [ProdutoController::class, 'update']); // Atualiza um produto específico
         Route::delete('/{produto}', [ProdutoController::class, 'destroy']); // Deleta um produto específico
     });
 
