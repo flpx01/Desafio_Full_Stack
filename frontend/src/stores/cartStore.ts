@@ -6,11 +6,23 @@ export const useCartStore = defineStore('cart', {
     ultimaCompra: {
       produtos: [] as Array<{ id: number; nome: string; preco: number; quantidade: number }>,
       total: 0,
+      forma_pagamento: '',
     },
   }),
 
+  getters: {
+    // Gera estrutura adequada para o backend
+    itensParaEnvio(state) {
+      return state.items.map(item => ({
+        produto_id: item.id,
+        quantidade: item.quantidade,
+        preco: item.preco,
+      }));
+    },
+  },
+
   actions: {
-    // Adiciona ou incrementa um produto no carrinho
+    // Adiciona um produto ao carrinho
     addToCart(produto: { id: number; nome: string; preco: number }) {
       const item = this.items.find(p => p.id === produto.id);
       if (item) {
@@ -20,25 +32,23 @@ export const useCartStore = defineStore('cart', {
       }
     },
 
-    // Remove completamente um item do carrinho
+    // Remove um item do carrinho
     removeFromCart(id: number) {
       this.items = this.items.filter(p => p.id !== id);
     },
 
-    // Limpa o carrinho todo
+    // Limpa o carrinho
     clearCart() {
       this.items = [];
     },
 
-    // Incrementa a quantidade de um produto específico
+    // Incrementa a quantidade de um item
     incrementarQuantidade(id: number) {
       const item = this.items.find(p => p.id === id);
-      if (item) {
-        item.quantidade += 1;
-      }
+      if (item) item.quantidade += 1;
     },
 
-    // Decrementa a quantidade ou remove se for 1
+    // Decrementa a quantidade ou remove
     decrementarQuantidade(id: number) {
       const item = this.items.find(p => p.id === id);
       if (item) {
@@ -50,13 +60,16 @@ export const useCartStore = defineStore('cart', {
       }
     },
 
-    // Finaliza a compra: salva os dados e limpa o carrinho
-    finalizarCompra() {
+    // Salva os dados da última compra e limpa carrinho
+    finalizarCompra(forma_pagamento?: string) {
       this.ultimaCompra.produtos = [...this.items];
       this.ultimaCompra.total = this.items.reduce(
         (sum, item) => sum + item.preco * item.quantidade,
         0
       );
+      if (forma_pagamento) {
+        this.ultimaCompra.forma_pagamento = forma_pagamento;
+      }
       this.clearCart();
     },
   },
