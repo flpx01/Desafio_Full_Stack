@@ -7,8 +7,10 @@ import ProductForm from '@/views/ProductForm.vue';
 import CategoriaForm from '@/views/CategoriaForm.vue';
 import Home from '@/views/Home.vue';
 import ProdutosPublicos from '@/views/ProdutosPublicos.vue';
-import { TokenService } from '@/service/TokenService';
+import Carrinho from '@/views/Carrinho.vue';
+import Confirmacao from '@/views/Confirmacao.vue'; // <- NOVO
 
+import { TokenService } from '@/service/TokenService';
 
 const getUserRole = () => {
   const userData = localStorage.getItem('user');
@@ -40,6 +42,30 @@ const routes = [
     path: '/produtos',
     name: 'ProdutosPublicos',
     component: ProdutosPublicos,
+    beforeEnter: (to, from, next) => {
+      if (TokenService.getToken() && getUserRole() === 'usuario') {
+        next();
+      } else {
+        next('/');
+      }
+    },
+  },
+  {
+    path: '/carrinho',
+    name: 'Carrinho',
+    component: Carrinho,
+    beforeEnter: (to, from, next) => {
+      if (TokenService.getToken() && getUserRole() === 'usuario') {
+        next();
+      } else {
+        next('/');
+      }
+    },
+  },
+  {
+    path: '/confirmacao',
+    name: 'Confirmacao',
+    component: Confirmacao,
     beforeEnter: (to, from, next) => {
       if (TokenService.getToken() && getUserRole() === 'usuario') {
         next();

@@ -10,6 +10,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/produtos">Produtos</router-link>
           </li>
+            <li class="nav-item">
+                <router-link class="nav-link" to="/carrinho">Carrinho</router-link>
+                </li>
         </ul>
   
         <div class="d-flex align-items-center">

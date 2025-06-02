@@ -42,7 +42,7 @@
                 <span class="badge bg-secondary mb-3">
                   {{ produto.categoria?.nome || 'Sem categoria' }}
                 </span>
-                <button class="btn btn-success mt-auto">Comprar</button>
+                <button class="btn btn-success mt-auto" @click="comprar(produto)">Comprar</button>
               </div>
             </div>
           </div>
@@ -59,7 +59,9 @@
   import { getProducts } from '@/service/productService';
   import api from '@/api';
   import UserHeader from '@/components/UserHeader.vue';
-  
+  import { useCartStore } from '@/stores/cartStore';
+
+  const cart = useCartStore();
   const produtos = ref<any[]>([]);
   const categorias = ref<any[]>([]);
   const categoriaSelecionada = ref('');
@@ -86,6 +88,10 @@
       (produto) => produto.categoria_id === parseInt(categoriaSelecionada.value)
     );
   });
+  function comprar(produto: any) {
+  cart.addToCart(produto);
+    alert(`Produto ${produto.nome} adicionado ao carrinho!`);
+  }
   
   onMounted(() => {
     carregarDados();
