@@ -1,5 +1,6 @@
 <template>
   <div class="container mt-5">
+    <AdminHeader />
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card shadow">
@@ -89,6 +90,7 @@
 import { ref } from 'vue';
 import { createProduct, updateProduct } from "@/service/productService";
 import type { Produto } from '@/service/productService';
+import AdminHeader from '@/components/AdminHeader.vue';
 
 // Emissão de eventos para o componente pai
 const emit = defineEmits(['produtoAdicionado']);

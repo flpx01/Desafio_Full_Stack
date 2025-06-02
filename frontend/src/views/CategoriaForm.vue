@@ -1,5 +1,6 @@
 <template>
     <div class="container mt-5">
+      <AdminHeader />
       <div class="row justify-content-center">
         <div class="col-md-6">
           <div class="card shadow">
@@ -33,6 +34,7 @@
   <script setup lang="ts">
   import { ref } from 'vue';
   import api from '@/api';
+  import AdminHeader from '@/components/AdminHeader.vue';
   
   const category = ref({ nome: '' });
   

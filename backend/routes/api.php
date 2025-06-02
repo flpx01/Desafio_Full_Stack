@@ -28,4 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{categoria}', [CategoriaController::class, 'update']); // Atualiza uma categoria específica
         Route::delete('/{categoria}', [CategoriaController::class, 'destroy']); // Deleta uma categoria específica
     });
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    });    
 });

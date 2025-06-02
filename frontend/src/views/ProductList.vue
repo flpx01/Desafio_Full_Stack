@@ -1,5 +1,6 @@
 <template>
   <div class="container mt-5">
+    <AdminHeader />
     <h1 class="text-center mb-4">Produtos Cadastrados</h1>
     <div class="row mb-3">
       <div class="col-md-6">
@@ -103,6 +104,7 @@
 <script setup>
 import { ref } from 'vue';
 import { getProducts, deleteProduct, updateProduct } from '../service/productService';
+import AdminHeader from '@/components/AdminHeader.vue';
 
 const products = ref([]);
 const search = ref('');
